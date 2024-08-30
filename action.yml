@@ -1,0 +1,58 @@
+name: Codefundi
+description: Captures the error log from npm deploy and debugs or explains the captured log.
+author: CodeFundi
+branding:
+  icon: 'terminal'
+  color: 'red'
+inputs:
+  command:
+    description: 'The node command you want to run (e.g., "npm run build").'
+    required: true
+    default: 'echo "💡 Remember to add your command"'
+  key:
+    description: 'The Code Fundi API key. Learn more: https://docs.codefundi.app/docs/features/frontend_debug#setup-api-key'
+    required: true
+    default: ''  
+  mode:
+    description: 'The error handling mode. Debug is the default ("explain" or "debug").'
+    required: true
+    default: 'debug'
+    options:
+      - explain
+      - debug
+  silent:
+    description: 'Runs Code Fundi in silent mode if true.'
+    required: false
+    default: 'false'
+    type: boolean      
+runs:
+  using: "composite"
+  steps:
+    - name: Run command
+      id: run-command
+      shell: bash
+      run: |
+        ERROR_LOG=$(${{ inputs.command }} 2>&1)
+        echo "ERROR_LOG<<EOF" >> $GITHUB_ENV
+        echo "$ERROR_LOG" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+        echo "$ERROR_LOG" > error_log.txt
+        if [ $? -ne 0 ]; then
+          echo "🚫 Command failed. Exiting."
+          exit 1
+        fi
+
+    - name: Run error handling
+      if: failure()
+      run:  |
+        if [ "${{ inputs.mode }}" = "explain" ]; then
+          echo "MODE_FLAG=-e" >> $GITHUB_ENV
+        elif [ "${{ inputs.mode }}" = "debug" ]; then
+          echo "MODE_FLAG=-d" >> $GITHUB_ENV
+        fi
+
+        if [ "${{ inputs.silent }}" = "true" ]; then
+          echo "SILENT_FLAG=-s" >> $GITHUB_ENV
+        fi
+        
+        npx @codefundi/cli --api-key=${{inputs.key}} ${{ env.MODE_FLAG }} "${{ env.ERROR_LOG }}"

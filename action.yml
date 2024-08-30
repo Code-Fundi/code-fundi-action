@@ -1,9 +1,9 @@
-name: CodeFundi
+name: code-fundi-action
 description: Captures the error log from npm deploy and debugs or explains the captured log.
 author: CodeFundi
 branding:
-  icon: 'terminal'
-  color: 'red'
+  icon: 'zap'
+  color: 'blue'
 inputs:
   command:
     description: 'The node command you want to run (e.g., "npm run build").'

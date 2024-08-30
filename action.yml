@@ -1,4 +1,4 @@
-name: Codefundi
+name: CodeFundi
 description: Captures the error log from npm deploy and debugs or explains the captured log.
 author: CodeFundi
 branding:

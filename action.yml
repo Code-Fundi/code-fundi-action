@@ -1,5 +1,5 @@
 name: CodeFundi Code Co-Pilot
-description: Captures the error log from npm deploy and debugs or explains the captured log.
+description: Captures the error log and debugs or explains the captured log.
 author: CodeFundi
 branding:
   icon: 'zap'

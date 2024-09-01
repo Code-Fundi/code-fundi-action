@@ -1,4 +1,4 @@
-name: CodeFundi Error Diagnosis AI
+name: CodeFundi Build Diagnosis AI
 description: Automatically capture and diagnose errors in your Github Action logs.
 author: CodeFundi
 branding:

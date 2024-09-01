@@ -1,5 +1,5 @@
-name: CodeFundi Code Co-Pilot
-description: Captures the error log and debugs or explains the captured log.
+name: CodeFundi Error Diagnosis AI
+description: Automatically capture and diagnose errors in your Github Action logs.
 author: CodeFundi
 branding:
   icon: 'zap'

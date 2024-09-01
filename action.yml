@@ -2,52 +2,45 @@ name: CodeFundi Error Diagnosis AI
 description: Automatically capture and diagnose errors in your Github Action logs.
 author: CodeFundi
 branding:
-  icon: 'zap'
-  color: 'blue'
+  icon: zap
+  color: blue
 inputs:
   command:
     description: 'The node command you want to run (e.g., "npm run build").'
     required: true
-    default: 'echo "💡 Remember to add your command"'
+    default: "echo "💡 Remember to add your command"
   key:
-    description: 'The Code Fundi API key. Learn more: https://docs.codefundi.app/docs/features/frontend_debug#setup-api-key'
+    description: >-
+      The Code Fundi API key. Learn more:
+      https://docs.codefundi.app/docs/features/frontend_debug#setup-api-key
     required: true
     default: ''
   silent:
-    description: 'Runs Code Fundi in silent mode if true.'
+    description: Runs Code Fundi in silent mode if true.
     required: false
     default: 'false'
-    type: boolean      
+    type: boolean
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-
     - name: Run command
       id: run-command
       shell: bash
       run: |
         ERROR_LOG=$(${{ inputs.command }} 2>&1)
-        echo "ERROR_LOG<<EOF" >> $GITHUB_ENV
-        echo "$ERROR_LOG" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-        echo "$ERROR_LOG" > error_log.txt
         if [ $? -ne 0 ]; then
-          echo "🚫 Command failed. Exiting."
-          exit 1
-        fi
+          echo "🚫 Command failed. Running diagnosis..."
+          
+          SILENT_FLAG=""
+          if [ "${{ inputs.silent }}" = "true" ]; then
+            SILENT_FLAG="-s"
+          fi
 
-    - name: Run error handling
-      if: failure()
-      shell: bash
-      run:  |
-        SILENT_FLAG=""
-        if [ "${{ inputs.silent }}" = "true" ]; then
-          SILENT_FLAG="-s"
-        fi
-        
-        npx @codefundi/cli --key=${{inputs.key}} --diagnose "${{ env.ERROR_LOG }}" ${SILENT_FLAG}
-    
+          npx @codefundi/cli --key=${{ inputs.key }} --diagnose "$ERROR_LOG" $SILENT_FLAG
+        else
+          echo "✅ Command ran successfuly."
+        fi      

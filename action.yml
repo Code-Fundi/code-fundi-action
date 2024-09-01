@@ -21,6 +21,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
     - name: Run command
       id: run-command
       shell: bash
@@ -37,6 +42,7 @@ runs:
 
     - name: Run error handling
       if: failure()
+      shell: bash
       run:  |
         SILENT_FLAG=""
         if [ "${{ inputs.silent }}" = "true" ]; then
@@ -44,3 +50,4 @@ runs:
         fi
         
         npx @codefundi/cli --key=${{inputs.key}} --diagnose "${{ env.ERROR_LOG }}" ${SILENT_FLAG}
+    

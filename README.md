@@ -40,7 +40,6 @@ jobs:
         uses: code-fundi/code-fundi-action@main
         with:
           command: npm run build
-          mode: debug
           key: ${{ secrets.CODE_FUNDI_API_KEY }}
 ```
 
@@ -59,7 +58,6 @@ jobs:
         uses: code-fundi/code-fundi-action@main
         with:
           command: npm run build
-          mode: debug
           key: ${{ secrets.CODE_FUNDI_API_KEY }}
           silent: true
 ```

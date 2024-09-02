@@ -8,7 +8,7 @@ inputs:
   command:
     description: 'The node command you want to run (e.g., "npm run build").'
     required: true
-    default: 'echo "Remember to add your command"'
+    default: echo "Remember to add your command"
   key:
     description: >-
       The Code Fundi API key. Learn more:

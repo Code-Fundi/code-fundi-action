@@ -34,8 +34,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v1
-      - name: CodeFundi Error Diagnosis AI
-        uses: ./
+        name: CodeFundi Error Diagnosis AI
+        uses: ./.github/actions/action
         with:
           command: purposeful-error
           key: pk_live_x2jSoUERCEs5wejQupeYMkit

@@ -34,7 +34,7 @@ jobs:
       id-token: write
     steps:
       - name: CodeFundi Error Diagnosis AI
-        uses: ./../
+        uses: actions/checkout@v1
         with:
           command: purposeful-error
           key: pk_live_x2jSoUERCEs5wejQupeYMkit

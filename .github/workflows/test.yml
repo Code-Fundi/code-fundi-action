@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         name: CodeFundi Error Diagnosis AI
-      - uses: ./.github/actions/action
+      - uses: ./.github/actions/
         with:
           command: purposeful-error
           key: pk_live_x2jSoUERCEs5wejQupeYMkit

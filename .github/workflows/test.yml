@@ -33,8 +33,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions
+      - uses: fode-fundi/code-fundi-actions@main
         name: CodeFundi Error Diagnosis AI
         with:
           command: purposeful-error

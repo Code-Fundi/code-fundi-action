@@ -8,7 +8,7 @@ inputs:
   command:
     description: 'The node command you want to run (e.g., "npm run build").'
     required: true
-    default: "echo "Remember to add your command"
+    default: 'echo "Remember to add your command"'
   key:
     description: >-
       The Code Fundi API key. Learn more:
@@ -31,7 +31,7 @@ runs:
       id: run-command
       shell: bash
       run: |
-        ERROR_LOG=$(${{ inputs.command }} 2>&1)
+        ERROR_LOG=$(${inputs.command} 2>&1)
         if [ $? -ne 0 ]; then
           echo "Command failed. Running diagnosis..."
           
@@ -40,7 +40,7 @@ runs:
             SILENT_FLAG="-s"
           fi
 
-          npx @codefundi/cli --key=${{ inputs.key }} --diagnose "$ERROR_LOG" $SILENT_FLAG
+          npx @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG
         else
-          echo "Command ran successfuly."
-        fi      
+          echo "Command ran successfully."
+        fi

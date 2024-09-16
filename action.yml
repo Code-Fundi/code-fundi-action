@@ -6,9 +6,9 @@ branding:
   color: blue
 inputs:
   command:
-    description: 'The node command you want to run (e.g., "npm run build").'
+    description: 'The npm command you want to run (e.g., "npm run build").'
     required: true
-    default: "echo '💡 Remember to add your command'"
+    default: "npm run build"
   key:
     description: >-
       The Code Fundi API key. Learn more:
@@ -27,17 +27,21 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-    - name: Run command and handle errors
+    - name: Run npm command and handle errors
       id: run-command
       shell: bash
       run: |
         set +e  # Temporarily disable exit on error
+        
+        # Run the npm command
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
         EXIT_CODE=$?
+        
         set -e  # Re-enable exit on error
 
         if [ $EXIT_CODE -ne 0 ]; then
           echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
+          echo "Error log: $ERROR_LOG"
           
           SILENT_FLAG=""
           if [ "${{ inputs.silent }}" = "true" ]; then

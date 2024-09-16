@@ -28,11 +28,6 @@ runs:
       with:
         node-version: '18'
 
-    - name: Set up NPM
-      id: run-npm
-      shell: bash
-      run: npm install npm -g        
-        
     - name: Run npm command and handle errors
       id: run-command
       shell: bash

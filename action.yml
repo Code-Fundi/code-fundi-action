@@ -57,7 +57,7 @@ runs:
           else
             echo "🔍 Diagnosis completed successfully."
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
-              echo "- $line" >> $GITHUB_STEP_SUMMARY
+              echo "$line" >> $GITHUB_STEP_SUMMARY
             done
           fi
         else

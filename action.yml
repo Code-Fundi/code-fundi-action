@@ -27,6 +27,10 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
+
+    - name: Install CodeFundi CLI globally
+      run: npm install -g @codefundi/cli
+
     - name: Run npm command and handle errors
       id: run-command
       shell: bash
@@ -51,7 +55,7 @@ runs:
 
           # Run CodeFundi diagnosis and log its output for debugging
           echo "Running CodeFundi diagnosis..."
-          DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
+          DIAGNOSIS_OUTPUT=$(codefundi --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
           echo "$DIAGNOSIS_OUTPUT"

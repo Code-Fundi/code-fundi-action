@@ -61,7 +61,7 @@ runs:
           else
             echo "🔍 Diagnosis completed successfully."
           fi
-        else:
+        else
           echo "✅ Command ran successfully."
         fi
 

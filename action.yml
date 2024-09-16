@@ -52,10 +52,12 @@ runs:
             count=0
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
               count=$((count + 1))  # Increment the counter
-              if [ "$count" -eq 2 ] || [ "$count" -eq 3 ]; then
+              if [ "$count" -eq 1 ]; then
+                echo "# $line" >> $GITHUB_STEP_SUMMARY  # Append # to the first line
+              elif [ "$count" -eq 2 ] || [ "$count" -eq 3 ]; then
                 echo "" >> $GITHUB_STEP_SUMMARY  # Skip spinner text
               else
-                echo "$line" >> $GITHUB_STEP_SUMMARY
+                echo "$line" >> $GITHUB_STEP_SUMMARY  # Echo all other lines
               fi
             done
           fi

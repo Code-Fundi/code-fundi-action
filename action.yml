@@ -39,7 +39,7 @@ runs:
         
         if [ $EXIT_CODE -ne 0 ]; then
           echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
-          
+
           SILENT_FLAG=""
           if [ "${{ inputs.silent }}" = "true" ]; then
             SILENT_FLAG="-s"
@@ -50,15 +50,22 @@ runs:
           DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r $SILENT_FLAG 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
-          echo "$DIAGNOSIS_OUTPUT"
-
+          # Save Markdown output to file
           if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
             echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
+            echo "::error::Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
           else
             echo "🔍 Diagnosis completed successfully."
+            echo "$DIAGNOSIS_OUTPUT" > diagnosis.md
+            echo "::notice::Diagnosis completed successfully. See the uploaded artifact for details."
           fi
         else
           echo "✅ Command ran successfully."
         fi
 
         set -e
+    - name: Upload Diagnosis Markdown
+      uses: actions/upload-artifact@v3
+      with:
+        name: diagnosis-report
+        path: diagnosis.md

@@ -40,10 +40,10 @@ runs:
         # Run the npm command
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
         EXIT_CODE=$?
-        
+
         if [ $EXIT_CODE -ne 0 ]; then
           echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
-          
+
           SILENT_FLAG=""
           if [ "${{ inputs.silent }}" = "true" ]; then
             SILENT_FLAG="-s"
@@ -53,9 +53,9 @@ runs:
           echo "Captured error log:"
           echo "$ERROR_LOG"
 
-          # Run CodeFundi diagnosis and log its output for debugging
+          # Run CodeFundi diagnosis globally
           echo "Running CodeFundi diagnosis..."
-          DIAGNOSIS_OUTPUT=$(codefundi --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
+          DIAGNOSIS_OUTPUT=$(codefundi-cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
           echo "$DIAGNOSIS_OUTPUT"

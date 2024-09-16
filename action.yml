@@ -56,7 +56,9 @@ runs:
             echo "::error::Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
           else
             echo "🔍 Diagnosis completed successfully."
-            printf $DIAGNOSIS_OUTPUT >> $GITHUB_STEP_SUMMARY
+            echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
+              echo "- $line" >> $GITHUB_STEP_SUMMARY
+            done
           fi
         else
           echo "✅ Command ran successfully."

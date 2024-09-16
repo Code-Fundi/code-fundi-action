@@ -28,45 +28,29 @@ runs:
       with:
         node-version: '18'
 
-    - name: Install CodeFundi CLI globally
-      run: npm install -g @codefundi/cli
-
-    - name: Run npm command and handle errors
+    - name: Run npm command and capture errors
       id: run-command
-      shell: bash
       run: |
         set +e
-        
-        # Run the npm command
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
-        EXIT_CODE=$?
-
-        if [ $EXIT_CODE -ne 0 ]; then
-          echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
-
-          SILENT_FLAG=""
-          if [ "${{ inputs.silent }}" = "true" ]; then
-            SILENT_FLAG="-s"
-          fi
-
-          # Output the error log for debugging
-          echo "Captured error log:"
-          echo "$ERROR_LOG"
-
-          # Run CodeFundi diagnosis globally
-          echo "Running CodeFundi diagnosis..."
-          DIAGNOSIS_OUTPUT=$(codefundi-cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
-          DIAGNOSIS_EXIT_CODE=$?
-
-          echo "$DIAGNOSIS_OUTPUT"
-
-          if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
-            echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
-          else
-            echo "🔍 Diagnosis completed successfully."
-          fi
-        else
-          echo "✅ Command ran successfully."
-        fi
-
+        echo "$ERROR_LOG" > error_log.txt
+        echo "::set-output name=exit-code::$?"
         set -e
+
+    - name: Check if the command failed
+      id: check-failure
+      run: |
+        if [ "${{ steps.run-command.outputs.exit-code }}" -ne 0 ]; then
+          echo "true" > failed.txt
+        else
+          echo "false" > failed.txt
+      continue-on-error: true
+
+    - name: Run CodeFundi Diagnosis if command failed
+      if: ${{ steps.check-failure.outputs.failed == 'true' }}
+      run: |
+        SILENT_FLAG=""
+        if [ "${{ inputs.silent }}" = "true" ]; then
+          SILENT_FLAG="-s"
+        fi
+        npx --yes @codefundi/cli --key="${{ inputs.key }}" --diagnose "$(cat error_log.txt)" $SILENT_FLAG

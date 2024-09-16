@@ -36,5 +36,5 @@ jobs:
       - uses: code-fundi/code-fundi-action@main
         name: CodeFundi Error Diagnosis AI
         with:
-          command: purposeful-error
+          command: echo hello
           key: pk_live_x2jSoUERCEs5wejQupeYMkit

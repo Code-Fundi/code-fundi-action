@@ -23,5 +23,5 @@ jobs:
       - uses: code-fundi/code-fundi-action@main
         name: CodeFundi Error Diagnosis AI
         with:
-          command: ls
+          command: npm run purposeful-error
           key: pk_live_x2jSoUERCEs5wejQupeYMkit

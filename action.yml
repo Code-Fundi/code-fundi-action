@@ -40,8 +40,6 @@ runs:
           DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r -s 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
-          echo "$DIAGNOSIS_OUTPUT"
-
           # Output diagnosis to GitHub Actions annotations
           if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
             echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."

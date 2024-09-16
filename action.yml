@@ -50,22 +50,17 @@ runs:
           DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r $SILENT_FLAG 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
-          # Save Markdown output to file
+          # Output diagnosis to GitHub Actions annotations
           if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
             echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
             echo "::error::Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
           else
             echo "🔍 Diagnosis completed successfully."
-            echo "$DIAGNOSIS_OUTPUT" > diagnosis.md
-            echo "::notice::Diagnosis completed successfully. See the uploaded artifact for details."
+            echo "::notice::Diagnosis completed successfully. Here are the details:"
+            echo "::notice::$DIAGNOSIS_OUTPUT"
           fi
         else
           echo "✅ Command ran successfully."
         fi
 
         set -e
-    - name: Upload Diagnosis Markdown
-      uses: actions/upload-artifact@v3
-      with:
-        name: diagnosis-report
-        path: diagnosis.md

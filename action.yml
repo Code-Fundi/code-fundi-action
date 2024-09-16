@@ -15,16 +15,11 @@ inputs:
       https://docs.codefundi.app/docs/features/frontend_debug#setup-api-key
     required: true
     default: ''
-  silent:
-    description: Runs CodeFundi in silent mode if true.
-    required: false
-    default: 'false'
-    type: boolean
 runs:
   using: composite
   steps:
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: '20'
     - name: Run npm command and handle errors
@@ -40,14 +35,9 @@ runs:
         if [ $EXIT_CODE -ne 0 ]; then
           echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
 
-          SILENT_FLAG=""
-          if [ "${{ inputs.silent }}" = "true" ]; then
-            SILENT_FLAG="-s"
-          fi
-
           # Run CodeFundi diagnosis and log its output for debugging
           echo "Running CodeFundi diagnosis..."
-          DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r $SILENT_FLAG 2>&1)
+          DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r -s 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
           echo "$DIAGNOSIS_OUTPUT"
@@ -59,7 +49,7 @@ runs:
           else
             echo "🔍 Diagnosis completed successfully."
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
-              printf "$line" >> $GITHUB_STEP_SUMMARY
+              echo "$line" >> $GITHUB_STEP_SUMMARY
             done
           fi
         else

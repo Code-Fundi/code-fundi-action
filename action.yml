@@ -43,15 +43,17 @@ runs:
           # Output diagnosis to GitHub Actions annotations
           if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
             echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
-            echo "::error::Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
+            echo "::error::❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
           else
             echo "🔍 Diagnosis completed successfully."
+            echo "::notice::🔍 Diagnosis completed successfully."
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
               echo "$line" >> $GITHUB_STEP_SUMMARY
             done
           fi
         else
-          echo "✅ Command ran successfully."
+          echo "✅ No errors detected."
+          echo "::notice::✅ No errors detected."
         fi
 
         set -e

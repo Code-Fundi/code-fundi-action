@@ -33,7 +33,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: code-fundi/code-fundi-actions@main
+      - uses: code-fundi/code-fundi-action@main
         name: CodeFundi Error Diagnosis AI
         with:
           command: purposeful-error

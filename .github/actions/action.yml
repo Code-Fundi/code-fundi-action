@@ -31,7 +31,7 @@ runs:
       id: run-command
       shell: bash
       run: |
-        ERROR_LOG=$(${{ inputs.command }} 2>&1)
+        ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
         if [ $? -ne 0 ]; then
           echo "🚫 Command failed. Running diagnosis..."
           

@@ -45,10 +45,6 @@ runs:
             SILENT_FLAG="-s"
           fi
 
-          # Output the error log for debugging
-          echo "Captured error log:"
-          echo "$ERROR_LOG"
-
           # Run CodeFundi diagnosis and log its output for debugging
           echo "Running CodeFundi diagnosis..."
           DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r $SILENT_FLAG 2>&1)

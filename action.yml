@@ -53,7 +53,7 @@ runs:
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
               count=$((count + 1))  # Increment the counter
               if [ "$count" -eq 2 ] || [ "$count" -eq 3 ]; then
-                echo "\n" >> $GITHUB_STEP_SUMMARY  # Skip spinner text
+                echo "" >> $GITHUB_STEP_SUMMARY  # Skip spinner text
               else
                 echo "$line" >> $GITHUB_STEP_SUMMARY
               fi

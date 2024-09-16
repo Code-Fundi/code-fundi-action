@@ -27,13 +27,17 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '18'
-    - name: Run command
+    - name: Run command and handle errors
       id: run-command
       shell: bash
       run: |
+        set +e  # Temporarily disable exit on error
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
-        if [ $? -ne 0 ]; then
-          echo "🚫 Command failed. Running diagnosis..."
+        EXIT_CODE=$?
+        set -e  # Re-enable exit on error
+
+        if [ $EXIT_CODE -ne 0 ]; then
+          echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
           
           SILENT_FLAG=""
           if [ "${{ inputs.silent }}" = "true" ]; then

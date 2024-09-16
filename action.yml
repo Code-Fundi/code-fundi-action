@@ -31,13 +31,14 @@ runs:
       id: run-command
       shell: bash
       run: |
+        set +e  # Temporarily disable exit on error
+        
         # Run the npm command
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
         EXIT_CODE=$?
-
+        
         if [ $EXIT_CODE -ne 0 ]; then
           echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
-          echo "Error log: $ERROR_LOG"
           
           SILENT_FLAG=""
           if [ "${{ inputs.silent }}" = "true" ]; then
@@ -45,16 +46,8 @@ runs:
           fi
 
           npx @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG
-          
-          echo "error_occurred=true" >> $GITHUB_OUTPUT
         else
           echo "✅ Command ran successfully."
-          echo "error_occurred=false" >> $GITHUB_OUTPUT
         fi
-        
-        # Always exit with 0 to allow GitHub Actions to continue
-        exit 0
-    - name: Check for errors
-      if: steps.run-command.outputs.error_occurred == 'true'
-      shell: bash
-      run: exit 1
+
+        set -e  # Re-enable exit on error

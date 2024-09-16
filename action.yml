@@ -45,15 +45,23 @@ runs:
             SILENT_FLAG="-s"
           fi
 
-          # Run CodeFundi diagnosis and wait for it to complete
-          npx @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG
-          WAIT_CODE=$?
-          if [ $WAIT_CODE -ne 0 ]; then
-            echo "❗ Diagnosis command failed with exit code $WAIT_CODE."
+          # Output the error log for debugging
+          echo "Captured error log:"
+          echo "$ERROR_LOG"
+
+          # Run CodeFundi diagnosis and log its output for debugging
+          echo "Running CodeFundi diagnosis..."
+          DIAGNOSIS_OUTPUT=$(npx @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" $SILENT_FLAG 2>&1)
+          DIAGNOSIS_EXIT_CODE=$?
+
+          echo "$DIAGNOSIS_OUTPUT"
+
+          if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
+            echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
           else
             echo "🔍 Diagnosis completed successfully."
           fi
-        else
+        else:
           echo "✅ Command ran successfully."
         fi
 

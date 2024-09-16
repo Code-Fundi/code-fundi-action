@@ -47,8 +47,14 @@ runs:
           else
             echo "🔍 Diagnosis completed successfully."
             echo "::notice::🔍 Diagnosis completed successfully."
+
+            # Initialize a counter
+            count=0
             echo "$DIAGNOSIS_OUTPUT" | while IFS= read -r line; do
-              echo "$line" >> $GITHUB_STEP_SUMMARY
+              count=$((count + 1))
+              if [ "$count" -ne 2 ] && [ "$count" -ne 3 ]; then # Skip spinner text
+                echo "$line" >> $GITHUB_STEP_SUMMARY
+              fi
             done
           fi
         else

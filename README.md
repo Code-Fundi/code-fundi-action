@@ -43,25 +43,6 @@ jobs:
           key: ${{ secrets.CODE_FUNDI_API_KEY }}
 ```
 
-Add `silent` to get the response only.
-
-```yml
-name: Site Build
-on: [push]
-jobs:
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Auto debug logs incase of error
-        uses: code-fundi/code-fundi-action@main
-        with:
-          command: npm run build
-          key: ${{ secrets.CODE_FUNDI_API_KEY }}
-          silent: true
-```
-
 ### Setup API Key
 To get your API Key head over to the [dashboard](https://codefundi.app/auth).
 

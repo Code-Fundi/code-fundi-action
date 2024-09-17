@@ -6,7 +6,7 @@ branding:
   color: blue
 inputs:
   command:
-    description: 'The npm command you want to run (e.g., "npm run build").'
+    description: 'The command you want to run (e.g., "npm run build").'
     required: true
     default: "npm run build"
   key:
@@ -22,31 +22,26 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-    - name: Run npm command and handle errors
+    - name: Run command and handle errors
       id: run-command
       shell: bash
       run: |
         set +e
         
-        # Run the npm command
+        # Run the command
         ERROR_LOG=$(eval "${{ inputs.command }}" 2>&1)
         EXIT_CODE=$?
         
         if [ $EXIT_CODE -ne 0 ]; then
-          echo "🚫 Command failed with exit code $EXIT_CODE. Running diagnosis..."
-
-          # Run CodeFundi diagnosis and log its output for debugging
           echo "Running CodeFundi diagnosis..."
-          DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --chat "$ERROR_LOG" -r -s 2>&1)
+          DIAGNOSIS_OUTPUT=$(npx --yes @codefundi/cli --key="${{ inputs.key }}" --diagnose "$ERROR_LOG" -r -s 2>&1)
           DIAGNOSIS_EXIT_CODE=$?
 
           # Output diagnosis to GitHub Actions annotations
           if [ $DIAGNOSIS_EXIT_CODE -ne 0 ]; then
-            echo "❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE."
-            echo "::error::❗ Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
+            echo "::error::❗ Code Fundi Diagnosis command failed with exit code $DIAGNOSIS_EXIT_CODE"
           else
-            echo "🔍 Diagnosis completed successfully."
-            echo "::notice::🔍 Diagnosis completed successfully."
+            echo "::notice::🔍 Code Fundi Diagnosis completed successfully."
 
             # Initialize a counter
             count=0
@@ -62,8 +57,7 @@ runs:
             done
           fi
         else
-          echo "✅ No errors detected."
-          echo "::notice::✅ No errors detected."
+          echo "::notice::✅ No errors detected during the Code Fundi Diagnosis."
         fi
 
         set -e
